@@ -1,0 +1,52 @@
+const express = require("express")
+const app = express()
+require("./model/connection")
+const User = require("./model/User")
+const cors = require("cors")
+const bodyParser = require("body-parser")
+
+app.use(cors())
+
+app.use(bodyParser.json())
+
+app.listen(3000)
+
+app.get("/alluser",(req,res)=>{
+    User.find().then((response)=>{
+        res.send("response")
+    })
+})
+
+
+app.post("/register",(req,res)=>{
+    User.create(req.body).then(()=>{
+        res.status(200).send({ message: "User Registered Successfully"})
+    })
+})
+
+app.post("/login", async (req,res)=>{
+    try{
+        var User =await User.findOne({ email: req.body.email})
+
+        if (!User) {
+            return res.status(401).send({ message: "Email not Found"});
+        }
+        if (User.password !== req.body.password) {
+            return res.status(401).send({message: "Password does not match"});
+        }
+        res.send({
+            message : "Login Successfully",
+            User : {
+                email : User.email,
+                password : User.password,
+                role : User.role
+            }
+        })
+    }catch (e){
+        res.status(500).send({message : e.message})
+    }
+})
+
+
+
+console.log("Connected")
