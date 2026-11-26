@@ -26,20 +26,25 @@ app.post("/register",(req,res)=>{
 
 app.post("/login", async (req,res)=>{
     try{
-        var User =await User.findOne({ email: req.body.email})
+        const existingUser = await User.findOne({ email: req.body.email})
 
-        if (!User) {
+        if (!existingUser) {
             return res.status(401).send({ message: "Email not Found"});
         }
-        if (User.password !== req.body.password) {
+        if (existingUser.password !== req.body.password) {
             return res.status(401).send({message: "Password does not match"});
         }
         res.send({
             message : "Login Successfully",
+            user : {
+                email : existingUser.email,
+                name : existingUser.name,
+                role : existingUser.role || "Attendee"
+            },
             User : {
-                email : User.email,
-                password : User.password,
-                role : User.role
+                email : existingUser.email,
+                name : existingUser.name,
+                role : existingUser.role || "Attendee"
             }
         })
     }catch (e){
