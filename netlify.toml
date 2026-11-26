@@ -1,0 +1,26 @@
+[build]
+  command = "cd frontend && npm install && npm run build"
+  publish = "frontend/dist"
+
+[server]
+  path = ["/api/*", "/login", "/register", "/alluser", "/health"]
+
+[[redirects]]
+  from = "/events"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/tickets"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/organizer"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin"
+  to = "/index.html"
+  status = 200
